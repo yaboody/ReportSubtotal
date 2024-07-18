@@ -3,7 +3,7 @@ Title: Adds Subtotals to Data Reports
 Version: 0.0.0.9000
 Authors@R: person(given = "Yoni",
            family = "Aboody",
-           role = c("aut", "cre"),
+           role = c("aut", "cre", "cph"),
            email = "yoniaboody@gmail.com")
 Description: Adds subtotal rows / sections (a la SAS's Proc Tabulate) to a Group By output by running a series of Group Bys with lesser	sets of variables and combining the results with the original.
 License: MIT + file LICENSE
