@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Subtotal Section Addition Function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for subtotal_section {ReportSubtotal}"><tr><td>subtotal_section {ReportSubtotal}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Subtotal Section Addition Function</h2>
+
+<h3>Description</h3>
+
+<p>Add subtotal sections to a data report.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+subtotal_section(
+  report,
+  frame,
+  vars = "Population",
+  aggregator = "sum",
+  parameters = list(),
+  subtotal_label = "All",
+  exclude = numeric(0)
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>report</code></td>
+<td>
+<p>The data report.</p>
+</td></tr>
+<tr valign="top"><td><code>frame</code></td>
+<td>
+<p>The data frame used to generate the data report.</p>
+</td></tr>
+<tr valign="top"><td><code>vars</code></td>
+<td>
+<p>The names of the column(s) in the data frame to be aggregated.</p>
+</td></tr>
+<tr valign="top"><td><code>aggregator</code></td>
+<td>
+<p>The aggregation function(s) to be used.</p>
+</td></tr>
+<tr valign="top"><td><code>parameters</code></td>
+<td>
+<p>The parameter(s) to be used with the aggregation function(s).</p>
+</td></tr>
+<tr valign="top"><td><code>subtotal_label</code></td>
+<td>
+<p>The label to be used for subtotal rows.</p>
+</td></tr>
+<tr valign="top"><td><code>exclude</code></td>
+<td>
+<p>The variables which need only subtotal rows and not sections.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The dataset and report are factorized,
+and a series of reports with the same variables are then generated,
+but with some variables replaced by a subtotal label,
+which concentrates all sections related to those variables
+into one subtotal row per section (or one section per many sections).
+Those subtotal reports are then combined with the original report,
+and then sorted (with the subtotal label as the first factor level).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The data report with subtotal sections included.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(dplyr)
+
+group_by(iris, Species) %&gt;%
+summarise(Petal_Sum = sum(Petal.Width)) %&gt;%
+subtotal_section(iris, "Petal.Width")
+
+group_by(mtcars, cyl, gear) %&gt;%
+summarise(Average_Miles = mean(mpg)) %&gt;%
+subtotal_section(mtcars, "mpg", aggregator = "mean")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>ReportSubtotal</em> version 0.0.0.9000 <a href="00Index.html">Index</a>]</div>
+</body></html>
