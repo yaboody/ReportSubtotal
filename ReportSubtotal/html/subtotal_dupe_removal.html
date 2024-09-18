@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Duplicate Subtotal Row Removal Function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for subtotal_dupe_removal {ReportSubtotal}"><tr><td>subtotal_dupe_removal {ReportSubtotal}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Duplicate Subtotal Row Removal Function</h2>
+
+<h3>Description</h3>
+
+<p>Removes duplicate subtotal rows,
+which may be created by totalling a variable with only one level.
+In tables with many variables, some may have only one level within one section and many in other sections.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+subtotal_dupe_removal(
+  data,
+  column,
+  iterator = 2,
+  skip = 0,
+  remove = "All",
+  suffix = "_Default_Suffix"
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>Data frame or tibble to remove duplicate row labels from.</p>
+</td></tr>
+<tr valign="top"><td><code>column</code></td>
+<td>
+<p>Column containing duplicate row labels.</p>
+</td></tr>
+<tr valign="top"><td><code>iterator</code></td>
+<td>
+<p>Minimum number of rows meant to be between each section. Usually two.</p>
+</td></tr>
+<tr valign="top"><td><code>skip</code></td>
+<td>
+<p>Number of rows to skip removing rows from. Usually zero. Can be used to dodge NA values.</p>
+</td></tr>
+<tr valign="top"><td><code>remove</code></td>
+<td>
+<p>Label of subtotals to be removed. Usually &quot;All&quot;.</p>
+</td></tr>
+<tr valign="top"><td><code>suffix</code></td>
+<td>
+<p>Suffix to disambiguate required column name if already taken.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Adds a leading version of the requested column,
+which places each observation in the same row as the next observation.
+Usually the observation 2 rows on - determined by the iterator.
+From here if both the original and leading column equal the value to be removed,
+then the row is a duplicate subtotal and is removed.
+Note: the last few rows will have NA values in the leading column, so they are covered separately.
+Note: If you already have columns named Lead or Index, they receive a temporary suffix.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The data report without duplicate subtotal rows.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(dplyr)
+
+group_by(mtcars, cyl, vs) %&gt;% summarise(sum(wt), .groups = "keep") %&gt;%
+subtotal_row(mtcars, "wt") %&gt;%
+subtotal_dupe_removal(2)
+group_by(mtcars, cyl, vs, am) %&gt;% summarise(mean(hp), .groups = "keep") %&gt;%
+subtotal_row(mtcars, "hp", "mean") %&gt;%
+subtotal_dupe_removal(3)
+group_by(mtcars, cyl, vs, am) %&gt;% summarise(mean(hp), .groups = "keep") %&gt;%
+subtotal_row(mtcars, "hp", "mean") %&gt;%
+subtotal_dupe_removal(3, skip = 1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>ReportSubtotal</em> version 0.0.0.9900 <a href="00Index.html">Index</a>]</div>
+</body></html>
