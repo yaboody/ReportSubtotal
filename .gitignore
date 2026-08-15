@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.Rdata
+.RdataTmp
+.httr-oauth
+.DS_Store
+
+# R package development and build artifacts
+/*.Rcheck/
+/*.tar.gz
