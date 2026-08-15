@@ -2,7 +2,7 @@ The goal of ReportSubtotal is to adds subtotal rows / sections (a la SAS's Proc 
 
 ## Installation
 
-You can install the released version of ReportSubtotalFinal from [CRAN](https://CRAN.R-project.org) (once I successfully upload it!) with:
+You can install the released version of ReportSubtotal from [CRAN](https://CRAN.R-project.org) (once I successfully upload it!) with:
 
 ``` r
 install.packages("ReportSubtotal")
