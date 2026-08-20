@@ -8,3 +8,4 @@
 # R package development and build artifacts
 /*.Rcheck/
 /*.tar.gz
+dev/

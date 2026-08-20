@@ -4,17 +4,17 @@
 
 #' @param report A data report.
 #' @param frame Data frame summarised by the data report.
-#' @param vars Names of column(s) in the data frame aggregated in the data report.
+#' @param vars Names of column(s) in the data frame which were aggregated in the data report.
 #' @param aggregator Function to aggregate the data with.
 #' @param exclude Vector of column indices determining which variables don't require subtotal rows.
 #' @param agg_parameter A named list of optional parameter(s) for the aggregation function to use.
 #' @param subtotal_label Label to be used for subtotal rows.
 
 #' @details The dataset and report are factorized, and a series of reports are generated.
-#' These reports are structured after the original one - using the same grouping variables,
-#' as well as aggregating the given variables with the given aggregation function and optional parameters.
+#' These reports are structured similarly to the original report - using the same grouping variables,
+#' aggregating the given variables with the given aggregation function and optional parameters.
 #' For best results, choose the same variables and aggregator used to generate the original report.
-#' Each generated report has some grouping variables replaced by a subtotal label,
+#' Each generated report has some grouping variables replaced by a chosen subtotal label,
 #' effectively concentrating all levels of those variables
 #' into one subtotal row for those variables.
 #' The subtotal reports are all combined with the original report,
@@ -27,15 +27,15 @@
 #' library(dplyr)
 #'
 #' group_by(iris, Species, Petal.Width) %>%
-#' summarise(sum(Petal.Length), .groups = "keep") %>%
+#' summarise(Sum_P_Len = sum(Petal.Length), .groups = "keep") %>%
 #' subtotal_row(iris, vars = "Petal.Length")
 #'
 #' group_by(iris, Species, Petal.Width) %>%
-#' summarise(mean(Sepal.Width), .groups = "keep") %>%
+#' summarise(Mean_S_Width = mean(Sepal.Width), .groups = "keep") %>%
 #' subtotal_row(iris, vars = "Sepal.Width", aggregator = "mean")
 #'
 #' group_by(mtcars, cyl, gear, carb) %>%
-#' summarise(median(wt), median(hp), .groups = "keep") %>%
+#' summarise(Med_Wt = median(wt), Med_Hp = median(hp), .groups = "keep") %>%
 #' subtotal_row(mtcars, vars = c("wt", "hp"), aggregator = "median")
 #'
 #' group_by(mtcars, cyl, gear, carb) %>%
@@ -43,7 +43,7 @@
 #' subtotal_row(mtcars, vars = c("wt", "hp"), aggregator = "median", exclude = 1)
 #'
 #' group_by(mtcars, vs, am, drat, carb) %>%
-#' summarise(min(mpg), min(disp), min(carb), .groups = "keep") %>%
+#' summarise(Min_Mpg = min(mpg), Min_Disp = min(disp), Min_Carb = min(carb), .groups = "keep") %>%
 #' subtotal_row(mtcars, vars = c("mpg", "disp", "carb"),
 #' aggregator = "min", exclude = c(2, 4),
 #' subtotal_label = "Min_Cars_Total", agg_parameter = list(na.rm = TRUE))

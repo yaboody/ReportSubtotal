@@ -7,13 +7,14 @@
 #' @param data Data report or data frame to remove duplicate row labels from.
 #' @param column Column containing duplicate row labels.
 #' @param iterator Minimum number of rows meant to be between each section. Usually two.
-#' @param skip Number of rows to skip removing rows from. Usually zero. Can be used to dodge NA values.
+#' @param skip Number of rows to skip removing rows from. Usually zero. Can be used to avoid dealing with NA values or column labels.
 #' @param remove Label of subtotals to be removed. Usually "Total".
 #' @param lead_name Default name for lead column used to filter duplicates.
 
 #' @details Adds a leading version of the requested column,
-#' which places each observation in the same row as the next observation.
-#' This is usually the observation 2 rows on, and is determined by the iterator parameter.
+#' which places each row level in the same row as the row level two levels ahead.
+#' This is usually the value 2 rows ahead of the current row,
+#' although if not the iterator parameter can be used to account for this.
 #' Then, if both the original and leading column equal the value to be removed,
 #' then the row is considered a duplicate subtotal and is removed.
 #' Note: Columns named Lead will receive a temporary suffix.
@@ -24,15 +25,15 @@
 #' @examples
 #' library(dplyr)
 #'
-#' group_by(mtcars, cyl, vs) %>% summarise(sum(wt), .groups = "keep") %>%
+#' group_by(mtcars, cyl, vs) %>% summarise(Sum_Wt = sum(wt), .groups = "keep") %>%
 #' subtotal_row(mtcars, "wt") %>%
 #' subtotal_dupe_removal(2)
 
-#' group_by(mtcars, cyl, vs, am) %>% summarise(mean(hp), .groups = "keep") %>%
+#' group_by(mtcars, cyl, vs, am) %>% summarise(Mean_HP = mean(hp), .groups = "keep") %>%
 #' subtotal_row(mtcars, "hp", "mean") %>%
 #' subtotal_dupe_removal(3, skip = 1)
 
-#' group_by(mtcars, cyl, vs, am) %>% summarise(mean(hp), .groups = "keep") %>%
+#' group_by(mtcars, cyl, vs, am) %>% summarise(Mean_HP = mean(hp), .groups = "keep") %>%
 #' subtotal_row(mtcars, "hp", "mean") %>%
 #' subtotal_dupe_removal(3, skip = 1)
 
@@ -41,10 +42,11 @@ subtotal_dupe_removal <- function(data, column, iterator = 2, skip = 0,
   if(length(column) > 1){
     stop("This function only accepts one column")
   }
-  if(nrow(data) <= iterator | nrow(data) <= skip){
-    warning(ifelse(nrow(data) <= iterator,
-                   "Your iterator is too big for this data report.",
-                   "You're skipping through too many rows."))
+  if(nrow(data) <= iterator){
+    warning("Your iterator is too big for this data report.")
+  }
+  if(nrow(data) <= skip){
+    warning("You're skipping through more rows than your report has!")
   }
 
   data <- ungroup(data)

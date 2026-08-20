@@ -12,6 +12,7 @@
 #' @noRd
 
 validate_column <- function(col, col_name, context_label) {
+
   if (is.factor(col)) {
     col <- as.character(col)
   }
@@ -74,7 +75,7 @@ subtotal_error_handle <- function(report, frame, vars, aggregator, exclude, agg_
     stop("\nData frame contains list-columns, which are not supported.", call. = FALSE)
   }
   if (ncol(frame) == 1){
-    stop("\nYour data report is too small!", call. = FALSE)
+    stop("\nYour data frame has only one column!", call. = FALSE)
   }
 
   if(!("grouped_df" %in% class(report))){
@@ -124,7 +125,6 @@ subtotal_error_handle <- function(report, frame, vars, aggregator, exclude, agg_
     warning("\nWarning: your labels and variables are overlapping.
             The overlapping variables will receive a default suffix to try to fix this.\n")
   }
-
 
   if (length(aggregator) > 1){
     stop("\nThis function doesn't accept multiple aggregators", call. = FALSE)

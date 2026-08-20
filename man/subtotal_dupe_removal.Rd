@@ -20,7 +20,7 @@ subtotal_dupe_removal(
 
 \item{iterator}{Minimum number of rows meant to be between each section. Usually two.}
 
-\item{skip}{Number of rows to skip removing rows from. Usually zero. Can be used to dodge NA values.}
+\item{skip}{Number of rows to skip removing rows from. Usually zero. Can be used to avoid dealing with NA values or column labels.}
 
 \item{remove}{Label of subtotals to be removed. Usually "Total".}
 
@@ -36,8 +36,9 @@ In tables with many variables, some may have only one level within one section a
 }
 \details{
 Adds a leading version of the requested column,
-which places each observation in the same row as the next observation.
-This is usually the observation 2 rows on, and is determined by the iterator parameter.
+which places each row level in the same row as the row level two levels ahead.
+This is usually the value 2 rows ahead of the current row,
+although if not the iterator parameter can be used to account for this.
 Then, if both the original and leading column equal the value to be removed,
 then the row is considered a duplicate subtotal and is removed.
 Note: Columns named Lead will receive a temporary suffix.
@@ -45,13 +46,13 @@ Note: Columns named Lead will receive a temporary suffix.
 \examples{
 library(dplyr)
 
-group_by(mtcars, cyl, vs) \%>\% summarise(sum(wt), .groups = "keep") \%>\%
+group_by(mtcars, cyl, vs) \%>\% summarise(Sum_Wt = sum(wt), .groups = "keep") \%>\%
 subtotal_row(mtcars, "wt") \%>\%
 subtotal_dupe_removal(2)
-group_by(mtcars, cyl, vs, am) \%>\% summarise(mean(hp), .groups = "keep") \%>\%
+group_by(mtcars, cyl, vs, am) \%>\% summarise(Mean_HP = mean(hp), .groups = "keep") \%>\%
 subtotal_row(mtcars, "hp", "mean") \%>\%
 subtotal_dupe_removal(3, skip = 1)
-group_by(mtcars, cyl, vs, am) \%>\% summarise(mean(hp), .groups = "keep") \%>\%
+group_by(mtcars, cyl, vs, am) \%>\% summarise(Mean_HP = mean(hp), .groups = "keep") \%>\%
 subtotal_row(mtcars, "hp", "mean") \%>\%
 subtotal_dupe_removal(3, skip = 1)
 }

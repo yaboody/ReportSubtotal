@@ -4,17 +4,17 @@
 
 #' @param report A data report.
 #' @param frame Data frame summarised by the data report.
-#' @param vars Names of column(s) in the data frame aggregated in the data report.
+#' @param vars Names of column(s) in the data frame which were aggregated in the data report.
 #' @param aggregator Function to aggregate the data with.
 #' @param exclude Vector of column indices determining which variables only require subtotal rows (as opposed to sections).
 #' @param agg_parameter A named list of optional parameter(s) for the aggregation function to use.
 #' @param subtotal_label Label to be used for subtotal rows.
 
 #' @details The dataset and report are factorized, and a series of reports are generated.
-#' These reports are structured similarly to the original one - using the same grouping variables,
-#' as well as aggregating the given variables with the given aggregation function and optional parameters.
+#' These reports are structured similarly to the original report - using the same grouping variables,
+#' aggregating the given variables with the given aggregation function and optional parameters.
 #' For best results, choose the same variables and aggregator used to generate the original report.
-#' Each generated report has some grouping variables replaced by a subtotal label,
+#' Each generated report has some grouping variables replaced by a chosen subtotal label,
 #' effectively concentrating all levels of those variables
 #' into one subtotal row for those variables - ultimately making up entire subtotal sections for some variables.
 #' The subtotal reports are all combined with the original report,
@@ -26,26 +26,26 @@
 #' @examples
 #' library(dplyr)
 #'
-# group_by(iris, Species) %>%
-# summarise(sum(Petal.Length), .groups = "keep") %>%
-# subtotal_section(iris, vars = "Petal.Length")
+#' group_by(iris, Species) %>%
+#' summarise(Sum_P_Len = sum(Petal.Length), .groups = "keep") %>%
+#' subtotal_section(iris, vars = "Petal.Length")
 #'
 #' group_by(mtcars, cyl, gear) %>%
-#' summarise(mean(mpg), .groups = "keep") %>%
+#' summarise(Mean_Mpg = mean(mpg), .groups = "keep") %>%
 #' subtotal_section(mtcars, vars = "mpg", aggregator = "mean")
 #'
 #' group_by(mtcars, cyl, gear) %>%
-#' summarise(mean(mpg), mean(wt), .groups = "keep") %>%
+#' summarise(Mean_Mpg = mean(mpg), Mean_Wt = mean(wt), .groups = "keep") %>%
 #' subtotal_section(mtcars, vars = c("mpg", "wt"),
 #' aggregator = "mean", exclude = 1:2)
 #'
 #' group_by(iris, Species, Petal.Width) %>%
-#' summarise(max(Sepal.Width), max(Sepal.Length), .groups = "keep") %>%
+#' summarise(Max_S_Width = max(Sepal.Width), Max_S_Length = max(Sepal.Length), .groups = "keep") %>%
 #' subtotal_section(iris, vars = c("Sepal.Width", "Sepal.Length"),
 #' aggregator = "max", agg_parameter = list(na.rm = TRUE))
 #'
 #' group_by(mtcars, qsec, carb, hp, gear) %>%
-#' summarise(min(cyl), min(drat), min(wt), .groups = "keep") %>%
+#' summarise(Min_Cyl = min(cyl), Min_Drat = min(drat), Min_Wt = min(wt), .groups = "keep") %>%
 #' subtotal_section(mtcars, vars = c("cyl", "drat", "wt"),
 #' aggregator = "min", agg_parameter = list(na.rm = TRUE),
 #' subtotal_label = "Cars_Total", exclude = c(1, 4))
@@ -92,6 +92,8 @@ subtotal_section <- function(report, frame, vars = "Population", aggregator = "s
   }
 
   report_list <- list(report)
+  print(report)
+  print(frame)
   for (j in 1:length(include_vec)){
     mutate_frame <- mutate(select_frame, across(all_of(include_vec[[j]]), function(x){x = factor(subtotal_label)}))
     if (length(agg_parameter) == 0){

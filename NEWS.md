@@ -1,11 +1,11 @@
 # ReportSubtotal 0.2.1
 
-* Formalized error handling within error handling helper function (including extra helper function for the helper function)
-* Added many error checks and data improvements where needed (With warnings to explain any changes)
-* Deprecated old _at and _all tidyverse function calls with across() and all_of()
 * Added robust handling for any aggregation function parameter using rlang
+* Formalized error handling with error handling helper function (and column validation helper function)
+* Added many error checks and data improvements where needed (with warnings accompanying important changes)
+* Deprecated old _at and _all tidyverse function calls with across() and all_of()
 * Cleaned up code and increased efficiency
-* Added lots and lots of tests for testing!
+* Added lots and lots of tests!
 
 # ReportSubtotal 0.1.2
 
